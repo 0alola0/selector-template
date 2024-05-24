@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Selector</title>
+  </head>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+    }
+    .hidden {
+      display: none;
+    }
+    .options {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      position: absolute;
+      background: white;
+      z-index: 1000;
+    }
+    .options ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .generated_selector_search {
+      width: 100%;
+    }
+    .pseudo-selector {
+      cursor: pointer;
+      box-sizing: border-box;
+      display: block;
+      padding: 8px;
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid #b7b1b1;
+    }
+    .options li {
+      padding: 8px;
+      cursor: pointer;
+    }
+    .options li:hover {
+      background-color: #f0f0f0;
+    }
+    .options li.selected {
+      background-color: #d0eaff;
+    }
+    .active_option {
+      background-color: #d0eaff;
+      padding: 5px;
+      margin: 3px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .options {
+      width: 100%;
+    }
+  </style>
+  <body>
+    <section>
+      <!-- 
+        class: 
+        selector_generator: initiates logic
+        searchable: enables search input
+
+        attribute:
+        multiple: enables multiple select
+       -->
+      <div class="selector_wrapper">
+        <select
+          class="hidden selector_generator searchable"
+          data-selector-id="58-sxf9"
+          multiple
+        >
+          <option value="AK" data-selector-id="select2-data-60-jos9">
+            Alaska
+          </option>
+          <option value="HI" data-selector-id="select2-data-66-nlg1">
+            Hawaii
+          </option>
+
+          <option value="CA" data-selector-id="select2-data-68-3zyz">
+            California
+          </option>
+          <option value="NV" data-selector-id="select2-data-69-ooda">
+            Nevada
+          </option>
+          <option value="OR" data-selector-id="select2-data-70-59zl">
+            Oregon
+          </option>
+          <option value="WA" data-selector-id="select2-data-71-y7dd">
+            Washington
+          </option>
+
+          <option value="AZ" data-selector-id="select2-data-73-p2o4">
+            Arizona
+          </option>
+          <option value="CO" data-selector-id="select2-data-74-vwsb">
+            Colorado
+          </option>
+          <option value="ID" data-selector-id="select2-data-75-a7ep">
+            Idaho
+          </option>
+          <option value="MT" data-selector-id="select2-data-76-nj1g">
+            Montana
+          </option>
+          <option value="NE" data-selector-id="select2-data-77-91y7">
+            Nebraska
+          </option>
+          <option value="NM" data-selector-id="select2-data-78-rx2r">
+            New Mexico
+          </option>
+          <option value="ND" data-selector-id="select2-data-79-00iu">
+            North Dakota
+          </option>
+          <option value="UT" data-selector-id="select2-data-80-mau7">
+            Utah
+          </option>
+          <option value="WY" data-selector-id="select2-data-64-6pnl">
+            Wyoming
+          </option>
+
+          <option value="AL" data-selector-id="select2-data-82-f1ku">
+            Alabama
+          </option>
+          <option value="AR" data-selector-id="select2-data-83-wy6j">
+            Arkansas
+          </option>
+          <option value="IL" data-selector-id="select2-data-84-yewe">
+            Illinois
+          </option>
+          <option value="IA" data-selector-id="select2-data-85-jvjl">
+            Iowa
+          </option>
+          <option value="KS" data-selector-id="select2-data-86-gzeq">
+            Kansas
+          </option>
+          <option value="KY" data-selector-id="select2-data-87-ed2t">
+            Kentucky
+          </option>
+          <option value="LA" data-selector-id="select2-data-88-p0o6">
+            Louisiana
+          </option>
+          <option value="MN" data-selector-id="select2-data-89-6goi">
+            Minnesota
+          </option>
+          <option value="MS" data-selector-id="select2-data-90-gnme">
+            Mississippi
+          </option>
+          <option value="MO" data-selector-id="select2-data-91-mhyk">
+            Missouri
+          </option>
+          <option value="OK" data-selector-id="select2-data-92-na2p">
+            Oklahoma
+          </option>
+          <option value="SD" data-selector-id="select2-data-93-2p3l">
+            South Dakota
+          </option>
+          <option value="TX" data-selector-id="select2-data-94-vvt2">
+            Texas
+          </option>
+          <option value="TN" data-selector-id="select2-data-95-kmxm">
+            Tennessee
+          </option>
+          <option value="WI" data-selector-id="select2-data-96-ga2h">
+            Wisconsin
+          </option>
+        </select>
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const selectorWrapper = document.querySelector(".selector_wrapper");
+        const selectElement = selectorWrapper.querySelector(
+          "select.selector_generator"
+        );
+
+        if (selectElement) {
+          const pseudoSelector = document.createElement("span");
+          pseudoSelector.className = "pseudo-selector";
+          pseudoSelector.textContent = "Select options";
+
+          const optionsContainer = document.createElement("div");
+          optionsContainer.className = "options hidden";
+
+          const optionsList = document.createElement("ul");
+
+          //If no option should be selected at first
+          selectElement.selectedIndex = -1;
+
+
+          Array.from(selectElement.options).forEach((option) => {
+            const li = document.createElement("li");
+            li.textContent = option.textContent;
+            li.dataset.value = option.value;
+            optionsList.appendChild(li);
+          });
+
+          optionsContainer.appendChild(optionsList);
+          selectorWrapper.appendChild(pseudoSelector);
+          selectorWrapper.appendChild(optionsContainer);
+
+          pseudoSelector.addEventListener("click", () => {
+            optionsContainer.classList.toggle("hidden");
+          });
+
+          optionsList.addEventListener("click", (event) => {
+            if (event.target.tagName === "LI") {
+              handleOptionClick(
+                event.target,
+                selectElement,
+                optionsList,
+                pseudoSelector
+              );
+            }
+          });
+
+          document.addEventListener("click", (event) => {
+            if (
+              !optionsContainer.contains(event.target) &&
+              event.target !== pseudoSelector
+            ) {
+              optionsContainer.classList.add("hidden");
+            }
+          });
+
+          if (selectElement.classList.contains("searchable")) {
+            const searchInput = document.createElement("input");
+            searchInput.type = "text";
+            searchInput.classList.add("generated_selector_search");
+            searchInput.placeholder = "Search options...";
+            searchInput.addEventListener(
+              "input",
+              debounce(() => filterOptions(searchInput, optionsList), 300)
+            );
+            optionsContainer.insertBefore(searchInput, optionsList);
+          }
+
+          updatePseudoSelectorText(pseudoSelector, selectElement);
+
+        }
+      });
+
+      function handleOptionClick(
+        li,
+        selectElement,
+        optionsList,
+        pseudoSelector
+      ) {
+        const selectedValue = li.dataset.value;
+        const selectedOption = selectElement.querySelector(
+          `option[value="${selectedValue}"]`
+        );
+        const isMultiple = selectElement.hasAttribute("multiple");
+
+        if (isMultiple) {
+          if (li.classList.contains("selected")) {
+            li.classList.remove("selected");
+            selectedOption.selected = false;
+          } else {
+            li.classList.add("selected");
+            selectedOption.selected = true;
+          }
+        } else {
+          Array.from(selectElement.options).forEach((option) => {
+            option.selected = false;
+            optionsList
+              .querySelector(`li[data-value="${option.value}"]`)
+              .classList.remove("selected");
+          });
+          li.classList.add("selected");
+          selectedOption.selected = true;
+          optionsList.closest(".options").classList.add("hidden");
+        }
+
+        updatePseudoSelectorText(pseudoSelector, selectElement);
+        logSelectedValues(selectElement);
+      }
+
+      function updatePseudoSelectorText(pseudoSelector, selectElement) {
+        pseudoSelector.innerHTML = "";
+
+        const selectedOptions = Array.from(selectElement.options).filter(
+          (option) => option.selected
+        );
+
+        if (selectedOptions.length > 0) {
+          selectedOptions.forEach((option) => {
+            const span = document.createElement("span");
+            span.className = "active_option";
+            span.textContent = option.textContent;
+            span.dataset.value = option.value;
+
+            span.addEventListener("click", (event) => {
+              event.stopPropagation();
+              const value = span.dataset.value;
+              const optionToDeselect = selectElement.querySelector(
+                `option[value="${value}"]`
+              );
+              const liToDeselect =
+                pseudoSelector.nextElementSibling.querySelector(
+                  `li[data-value="${value}"]`
+                );
+
+              span.remove();
+              optionToDeselect.selected = false;
+              liToDeselect.classList.remove("selected");
+
+              if (pseudoSelector.innerHTML === "") {
+                pseudoSelector.textContent = "Select options";
+              }
+
+              logSelectedValues(selectElement);
+            });
+
+            pseudoSelector.appendChild(span);
+          });
+        } else {
+          pseudoSelector.textContent = "Select options";
+        }
+      }
+
+      function logSelectedValues(selectElement) {
+        const selectedValues = Array.from(selectElement.options)
+          .filter((option) => option.selected)
+          .map((option) => option.value);
+        console.log(selectedValues);
+      }
+
+      function filterOptions(searchInput, optionsList) {
+        const searchText = searchInput.value.toLowerCase();
+        Array.from(optionsList.children).forEach((li) => {
+          const optionText = li.textContent.toLowerCase();
+          li.style.display = optionText.includes(searchText) ? "block" : "none";
+        });
+      }
+
+      function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      }
+    </script>
+  </body>
+</html>
