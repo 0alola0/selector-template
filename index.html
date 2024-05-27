@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Custom Selector</title>
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
       body,
       html {
         margin: 0;
@@ -13,6 +14,15 @@
       .hidden {
         display: none;
       }
+      label {
+        display: block;
+        font-family: Open Sans;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 20.43px;
+        text-align: left;
+        margin-bottom: 8px;
+      }
       .options {
         max-height: 200px;
         overflow-y: auto;
@@ -20,6 +30,16 @@
         position: absolute;
         background: white;
         z-index: 1000;
+        box-sizing: border-box;
+        padding: 11px 15px 11px 15px;
+        border-radius: 8px;
+        border: 1px solid #bbbbbb;
+        position: relative;
+        font-family: Open Sans;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20.43px;
+        text-align: left;
       }
       .options ul {
         list-style: none;
@@ -28,15 +48,53 @@
       }
       .generated_selector_search {
         width: 100%;
+        border-radius: 4px;
+        border: 1px solid #bbbbbb;
+        position: relative;
+        font-family: Open Sans;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 20.43px;
+        text-align: left;
       }
       .pseudo-selector {
         cursor: pointer;
         box-sizing: border-box;
         display: block;
-        padding: 8px;
+        padding: 11px 40px 11px 15px;
         width: 100%;
-        border-radius: 4px;
-        border: 1px solid #b7b1b1;
+        border-radius: 8px;
+        border: 1px solid #bbbbbb;
+        position: relative;
+        font-family: Open Sans;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20.43px;
+        text-align: left;
+      }
+
+      .pseudo-selector::after {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 6px;
+        background: url('data:image/svg+xml,<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.71655 0.232035C8.85799 0.0833867 9.04899 0 9.24803 0C9.44708 0 9.63807 0.0833867 9.77951 0.232035C9.84935 0.305029 9.9048 0.392037 9.94265 0.487995C9.98051 0.583952 10 0.686942 10 0.790971C10 0.895001 9.98051 0.99799 9.94265 1.09395C9.9048 1.18991 9.84935 1.27691 9.77951 1.34991L5.53202 5.76833C5.39026 5.91677 5.19913 6 5 6C4.80087 6 4.60974 5.91677 4.46798 5.76833L0.220486 1.34991C0.150654 1.27691 0.0951987 1.18991 0.057346 1.09395C0.0194934 0.99799 0 0.895001 0 0.790971C0 0.686942 0.0194934 0.583952 0.057346 0.487995C0.0951987 0.392037 0.150654 0.305029 0.220486 0.232035C0.361925 0.0833867 0.552923 0 0.751966 0C0.951008 0 1.14201 0.0833867 1.28345 0.232035L5.00163 3.8556L8.71655 0.232035Z" fill="%23333333"/></svg>');
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s linear;
+      }
+      .pseudo-selector.open::after {
+        content: "";
+        display: block;
+        width: 10px;
+        height: 6px;
+        background: url('data:image/svg+xml,<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.71655 0.232035C8.85799 0.0833867 9.04899 0 9.24803 0C9.44708 0 9.63807 0.0833867 9.77951 0.232035C9.84935 0.305029 9.9048 0.392037 9.94265 0.487995C9.98051 0.583952 10 0.686942 10 0.790971C10 0.895001 9.98051 0.99799 9.94265 1.09395C9.9048 1.18991 9.84935 1.27691 9.77951 1.34991L5.53202 5.76833C5.39026 5.91677 5.19913 6 5 6C4.80087 6 4.60974 5.91677 4.46798 5.76833L0.220486 1.34991C0.150654 1.27691 0.0951987 1.18991 0.057346 1.09395C0.0194934 0.99799 0 0.895001 0 0.790971C0 0.686942 0.0194934 0.583952 0.057346 0.487995C0.0951987 0.392037 0.150654 0.305029 0.220486 0.232035C0.361925 0.0833867 0.552923 0 0.751966 0C0.951008 0 1.14201 0.0833867 1.28345 0.232035L5.00163 3.8556L8.71655 0.232035Z" fill="%23333333"/></svg>');
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%) rotate(180deg);
       }
       .options li {
         padding: 8px;
@@ -49,11 +107,15 @@
         background-color: #d0eaff;
       }
       .active_option {
-        background-color: #d0eaff;
-        padding: 5px;
         margin: 3px;
         border-radius: 4px;
         display: inline-block;
+        font-family: Open Sans;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 20.43px;
+        text-align: left;       
+        margin: 0 2px;
       }
       .options {
         width: 100%;
@@ -72,9 +134,11 @@
         multiple: enables multiple select
        -->
 
+        <label for="select-58-sxf9">Select Your Options</label>
         <select
           class="hidden selector_generator searchable"
           data-selector-id="58-sxf9"
+          id="select-58-sxf9"
           multiple
         >
           <option value="MN" data-selector-id="select2-data-89-6goi">
@@ -103,38 +167,6 @@
           </option>
         </select>
       </div>
-
-      <div class="selector_wrapper">
-        <select class="hidden selector_generator" data-selector-id="58-sxf9">
-          <option value="1AZ" data-selector-id="select2-data-73-p2o4">
-            Arizona
-          </option>
-          <option value="1CO" data-selector-id="select2-data-74-vwsb">
-            Colorado
-          </option>
-          <option value="1ID" data-selector-id="select2-data-75-a7ep">
-            Idaho
-          </option>
-          <option value="1MT" data-selector-id="select2-data-76-nj1g">
-            Montana
-          </option>
-          <option value="1NE" data-selector-id="select2-data-77-91y7">
-            Nebraska
-          </option>
-          <option value="1NM" data-selector-id="select2-data-78-rx2r">
-            New Mexico
-          </option>
-          <option value="1ND" data-selector-id="select2-data-79-00iu">
-            North Dakota
-          </option>
-          <option value="1UT" data-selector-id="select2-data-80-mau7">
-            Utah
-          </option>
-          <option value="1WY" data-selector-id="select2-data-64-6pnl">
-            Wyoming
-          </option>
-        </select>
-      </div>
     </section>
 
     <script>
@@ -149,7 +181,7 @@
           if (selectElement) {
             const pseudoSelector = document.createElement("span");
             pseudoSelector.className = "pseudo-selector";
-            pseudoSelector.textContent = "Select options";
+            pseudoSelector.textContent = "Please Select";
 
             const optionsContainer = document.createElement("div");
             optionsContainer.className = "options hidden";
@@ -187,6 +219,7 @@
 
             pseudoSelector.addEventListener("click", () => {
               optionsContainer.classList.toggle("hidden");
+              pseudoSelector.classList.toggle("open");
             });
 
             document.addEventListener("click", (event) => {
@@ -195,6 +228,7 @@
                 event.target !== pseudoSelector
               ) {
                 optionsContainer.classList.add("hidden");
+                pseudoSelector.classList.remove("open");
               }
             });
 
@@ -275,6 +309,7 @@
 
             selectedOption.selected = true;
             optionsList.closest(".options").classList.add("hidden");
+            pseudoSelector.classList.remove("open");
           }
         }
         if (!isMultiple && selectedOption.selected === false) {
@@ -321,14 +356,14 @@
               );
 
               if (pseudoSelector.innerHTML === "") {
-                pseudoSelector.textContent = "Select options";
+                pseudoSelector.textContent = "Please Select";
               }
             });
 
             pseudoSelector.appendChild(span);
           });
         } else {
-          pseudoSelector.textContent = "Select options";
+          pseudoSelector.textContent = "Please Select";
         }
       }
 
