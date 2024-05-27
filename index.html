@@ -72,7 +72,22 @@
         line-height: 20.43px;
         text-align: left;
       }
+      .pseudo-selector.searchable_pseudo {
+        padding: 11px 40px 11px 40px;
+      }
 
+      .searchable_pseudo::before {
+        content: "";
+        display: block;
+        width: 16px;
+        height: 16px;
+        background: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(%23clip0_0_30)"><path d="M15.7125 14.8637L11.8882 11.0171C12.8362 9.85469 13.4075 8.36571 13.4075 6.74286C13.4075 3.02041 10.4046 0 6.70377 0C2.99965 0 0 3.02041 0 6.74286C0 10.4653 2.99965 13.4857 6.70377 13.4857C8.31722 13.4857 9.79432 12.9143 10.95 11.9608L14.7743 15.8041C15.034 16.0653 15.4528 16.0653 15.7125 15.8041C15.9722 15.5461 15.9722 15.1216 15.7125 14.8637ZM6.70377 12.1437C3.73983 12.1437 1.33101 9.72082 1.33101 6.74286C1.33101 3.7649 3.73983 1.33878 6.70377 1.33878C9.66446 1.33878 12.0765 3.7649 12.0765 6.74286C12.0765 9.72082 9.66446 12.1437 6.70377 12.1437Z" fill="%23AAAAAA"/></g><defs><clipPath id="clip0_0_30"><rect width="16" height="16" fill="white"/></clipPath></defs></svg>');
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        transition: all 0.2s linear;
+      }
       .pseudo-selector::after {
         content: "";
         display: block;
@@ -80,7 +95,7 @@
         height: 6px;
         background: url('data:image/svg+xml,<svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.71655 0.232035C8.85799 0.0833867 9.04899 0 9.24803 0C9.44708 0 9.63807 0.0833867 9.77951 0.232035C9.84935 0.305029 9.9048 0.392037 9.94265 0.487995C9.98051 0.583952 10 0.686942 10 0.790971C10 0.895001 9.98051 0.99799 9.94265 1.09395C9.9048 1.18991 9.84935 1.27691 9.77951 1.34991L5.53202 5.76833C5.39026 5.91677 5.19913 6 5 6C4.80087 6 4.60974 5.91677 4.46798 5.76833L0.220486 1.34991C0.150654 1.27691 0.0951987 1.18991 0.057346 1.09395C0.0194934 0.99799 0 0.895001 0 0.790971C0 0.686942 0.0194934 0.583952 0.057346 0.487995C0.0951987 0.392037 0.150654 0.305029 0.220486 0.232035C0.361925 0.0833867 0.552923 0 0.751966 0C0.951008 0 1.14201 0.0833867 1.28345 0.232035L5.00163 3.8556L8.71655 0.232035Z" fill="%23333333"/></svg>');
         position: absolute;
-        right: 12px;
+        right: 18px;
         top: 50%;
         transform: translateY(-50%);
         transition: all 0.2s linear;
@@ -114,7 +129,7 @@
         font-size: 15px;
         font-weight: 400;
         line-height: 20.43px;
-        text-align: left;       
+        text-align: left;
         margin: 0 2px;
       }
       .options {
@@ -136,7 +151,7 @@
 
         <label for="select-58-sxf9">Select Your Options</label>
         <select
-          class="hidden selector_generator searchable"
+          class="hidden selector_generator"
           data-selector-id="58-sxf9"
           id="select-58-sxf9"
           multiple
@@ -233,6 +248,7 @@
             });
 
             if (selectElement.classList.contains("searchable")) {
+              pseudoSelector.className = "pseudo-selector searchable_pseudo";
               const searchInput = document.createElement("input");
               searchInput.type = "text";
               searchInput.classList.add("generated_selector_search");
