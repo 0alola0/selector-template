@@ -62,7 +62,8 @@
   </head>
   <body>
     <section>
-      <!-- 
+      <div class="selector_wrapper">
+        <!-- 
         class: 
         selector_generator: initiates logic
         searchable: enables search input
@@ -70,18 +71,12 @@
         attribute:
         multiple: enables multiple select
        -->
-      <div class="selector_wrapper">
+
         <select
           class="hidden selector_generator searchable"
           data-selector-id="58-sxf9"
           multiple
         >
-          <option value="KY" data-selector-id="select2-data-87-ed2t">
-            Kentucky
-          </option>
-          <option value="LA" data-selector-id="select2-data-88-p0o6">
-            Louisiana
-          </option>
           <option value="MN" data-selector-id="select2-data-89-6goi">
             Minnesota
           </option>
@@ -161,13 +156,28 @@
 
             const optionsList = document.createElement("ul");
 
-            // If no option should be selected at first
             selectElement.selectedIndex = -1;
 
-            Array.from(selectElement.options).forEach((option) => {
+            const optionElements = Array.from(selectElement.options).map(
+              (option) => ({
+                text: option.textContent,
+                value: option.value,
+              })
+            );
+
+            optionElements.forEach((option) => {
               const li = document.createElement("li");
-              li.textContent = option.textContent;
+              li.textContent = option.text;
               li.dataset.value = option.value;
+              li.addEventListener("click", () => {
+                handleOptionClick(
+                  li,
+                  selectElement,
+                  optionsList,
+                  pseudoSelector,
+                  optionElements
+                );
+              });
               optionsList.appendChild(li);
             });
 
@@ -177,17 +187,6 @@
 
             pseudoSelector.addEventListener("click", () => {
               optionsContainer.classList.toggle("hidden");
-            });
-
-            optionsList.addEventListener("click", (event) => {
-              if (event.target.tagName === "LI") {
-                handleOptionClick(
-                  event.target,
-                  selectElement,
-                  optionsList,
-                  pseudoSelector
-                );
-              }
             });
 
             document.addEventListener("click", (event) => {
@@ -224,40 +223,49 @@
         li,
         selectElement,
         optionsList,
-        pseudoSelector
+        pseudoSelector,
+        optionElements
       ) {
         const selectedValue = li.dataset.value;
         const selectedOption = selectElement.querySelector(
           `option[value="${selectedValue}"]`
         );
 
-        if (!selectedOption) return; 
+        if (!selectedOption) return;
 
         const isMultiple = selectElement.hasAttribute("multiple");
 
         if (isMultiple) {
           if (selectedOption.selected) {
             selectedOption.selected = false;
-            optionsList.appendChild(li);
+            addOptionInOrder(
+              optionsList,
+              selectedValue,
+              optionElements,
+              pseudoSelector,
+              selectElement
+            );
           } else {
             selectedOption.selected = true;
             li.remove();
           }
         } else {
+          li.remove();
           if (!selectedOption.selected) {
             optionsList.innerHTML = "";
 
-            Array.from(selectElement.options).forEach((option) => {
-              if (option !== selectedOption) {
+            optionElements.forEach((option) => {
+              if (option.value !== selectedValue) {
                 const newLi = document.createElement("li");
-                newLi.textContent = option.textContent;
+                newLi.textContent = option.text;
                 newLi.dataset.value = option.value;
                 newLi.addEventListener("click", (event) => {
                   handleOptionClick(
                     event.target,
                     selectElement,
                     optionsList,
-                    pseudoSelector
+                    pseudoSelector,
+                    optionElements
                   );
                 });
 
@@ -269,9 +277,10 @@
             optionsList.closest(".options").classList.add("hidden");
           }
         }
-
+        if (!isMultiple && selectedOption.selected === false) {
+          selectElement.value = "";
+        }
         updatePseudoSelectorText(pseudoSelector, selectElement, optionsList);
-        logSelectedValues(selectElement);
       }
 
       function updatePseudoSelectorText(
@@ -298,28 +307,22 @@
               const optionToDeselect = selectElement.querySelector(
                 `option[value="${value}"]`
               );
-
-              const li = document.createElement("li");
-              li.textContent = optionToDeselect.textContent;
-              li.dataset.value = optionToDeselect.value;
-              li.addEventListener("click", (event) => {
-                handleOptionClick(
-                  event.target,
-                  selectElement,
-                  optionsList,
-                  pseudoSelector
-                );
-              });
-
               optionToDeselect.selected = false;
-              optionsList.appendChild(li);
               span.remove();
+              addOptionInOrder(
+                optionsList,
+                value,
+                Array.from(selectElement.options).map((opt) => ({
+                  text: opt.textContent,
+                  value: opt.value,
+                })),
+                pseudoSelector,
+                selectElement
+              );
 
               if (pseudoSelector.innerHTML === "") {
                 pseudoSelector.textContent = "Select options";
               }
-
-              logSelectedValues(selectElement);
             });
 
             pseudoSelector.appendChild(span);
@@ -329,11 +332,46 @@
         }
       }
 
-      function logSelectedValues(selectElement) {
-        const selectedValues = Array.from(selectElement.options)
-          .filter((option) => option.selected)
-          .map((option) => option.value);
-        console.log(selectedValues);
+      function addOptionInOrder(
+        optionsList,
+        value,
+        optionElements,
+        pseudoSelector,
+        selectElement
+      ) {
+        const optionToAdd = optionElements.find(
+          (option) => option.value === value
+        );
+
+        const li = document.createElement("li");
+        li.textContent = optionToAdd.text;
+        li.dataset.value = optionToAdd.value;
+        li.addEventListener("click", (event) => {
+          handleOptionClick(
+            event.target,
+            selectElement,
+            optionsList,
+            pseudoSelector,
+            optionElements
+          );
+        });
+
+        const currentOptions = Array.from(optionsList.children);
+        let inserted = false;
+        for (let i = 0; i < currentOptions.length; i++) {
+          if (
+            optionElements.findIndex(
+              (option) => option.value === currentOptions[i].dataset.value
+            ) > optionElements.findIndex((option) => option.value === value)
+          ) {
+            optionsList.insertBefore(li, currentOptions[i]);
+            inserted = true;
+            break;
+          }
+        }
+        if (!inserted) {
+          optionsList.appendChild(li);
+        }
       }
 
       function filterOptions(searchInput, optionsList) {
