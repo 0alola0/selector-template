@@ -34,7 +34,6 @@
         padding: 11px 15px 11px 15px;
         border-radius: 8px;
         border: 1px solid #bbbbbb;
-        position: relative;
         font-family: Open Sans;
         font-size: 12px;
         font-weight: 400;
@@ -74,6 +73,10 @@
       }
       .pseudo-selector.searchable_pseudo {
         padding: 11px 40px 11px 40px;
+      }
+      .pseudo-selector.disabled {
+        pointer-events: none;
+        background-color: #eeeeee;
       }
 
       .searchable_pseudo::before {
@@ -182,6 +185,49 @@
           </option>
         </select>
       </div>
+      <div class="selector_wrapper">
+        <!-- 
+        class: 
+        selector_generator: initiates logic
+        searchable: enables search input
+
+        attribute:
+        multiple: enables multiple select
+       -->
+
+        <label for="select-58-sxf9">Select Your Options</label>
+        <select
+          class="hidden selector_generator"
+          data-selector-id="58-sxf9"
+          id="select-58-sxf9"
+          multiple
+        >
+          <option value="MN" data-selector-id="select2-data-89-6goi">
+            Minnesota
+          </option>
+          <option value="MS" data-selector-id="select2-data-90-gnme">
+            Mississippi
+          </option>
+          <option value="MO" data-selector-id="select2-data-91-mhyk">
+            Missouri
+          </option>
+          <option value="OK" data-selector-id="select2-data-92-na2p">
+            Oklahoma
+          </option>
+          <option value="SD" data-selector-id="select2-data-93-2p3l">
+            South Dakota
+          </option>
+          <option value="TX" data-selector-id="select2-data-94-vvt2">
+            Texas
+          </option>
+          <option value="TN" data-selector-id="select2-data-95-kmxm">
+            Tennessee
+          </option>
+          <option value="WI" data-selector-id="select2-data-96-ga2h">
+            Wisconsin
+          </option>
+        </select>
+      </div>
     </section>
 
     <script>
@@ -229,12 +275,29 @@
             });
 
             optionsContainer.appendChild(optionsList);
+
+            let footer = document.querySelector("footer");
+            if (!footer) {
+              footer = document.createElement("footer");
+              document.body.appendChild(footer);
+            }
+
+            footer.appendChild(optionsContainer);
+
             selectorWrapper.appendChild(pseudoSelector);
-            selectorWrapper.appendChild(optionsContainer);
 
             pseudoSelector.addEventListener("click", () => {
               optionsContainer.classList.toggle("hidden");
               pseudoSelector.classList.toggle("open");
+
+              const pseudoRect = pseudoSelector.getBoundingClientRect();
+              optionsContainer.style.width = `${pseudoRect.width}px`;
+              optionsContainer.style.top = `${
+                pseudoRect.bottom + window.scrollY
+              }px`; // Adjust for scroll position
+              optionsContainer.style.left = `${
+                pseudoRect.left + window.scrollX
+              }px`; // Adjust for scroll position
             });
 
             document.addEventListener("click", (event) => {
@@ -247,6 +310,9 @@
               }
             });
 
+            if (selectElement.disabled) {
+              pseudoSelector.classList.add("disabled");
+            }
             if (selectElement.classList.contains("searchable")) {
               pseudoSelector.className = "pseudo-selector searchable_pseudo";
               const searchInput = document.createElement("input");
