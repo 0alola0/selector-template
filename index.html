@@ -138,9 +138,14 @@
       .options {
         width: 100%;
       }
+      .spacer {
+        height: 600px;
+      }
     </style>
   </head>
   <body>
+    <section class="spacer">bla</section>
+    <section class="spacer">bla</section>
     <section>
       <div class="selector_wrapper">
         <!-- 
@@ -154,7 +159,7 @@
 
         <label for="select-58-sxf9">Select Your Options</label>
         <select
-          class="hidden selector_generator"
+          class="hidden selector_generator searchable"
           data-selector-id="58-sxf9"
           id="select-58-sxf9"
           multiple
@@ -229,6 +234,8 @@
         </select>
       </div>
     </section>
+    <section class="spacer">bla</section>
+    <section class="spacer">bla</section>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -291,13 +298,27 @@
               pseudoSelector.classList.toggle("open");
 
               const pseudoRect = pseudoSelector.getBoundingClientRect();
+              const viewportHeight = window.innerHeight;
+
+              const spaceBelow = viewportHeight - pseudoRect.bottom;
+              const spaceAbove = pseudoRect.top;
+
+              if (spaceBelow < 200 && spaceAbove > 250) {
+                optionsContainer.style.top = `${
+                  pseudoRect.top +
+                  window.scrollY -
+                  optionsContainer.offsetHeight
+                }px`;
+              } else {
+                optionsContainer.style.top = `${
+                  pseudoRect.bottom + window.scrollY
+                }px`;
+              }
+
               optionsContainer.style.width = `${pseudoRect.width}px`;
-              optionsContainer.style.top = `${
-                pseudoRect.bottom + window.scrollY
-              }px`; 
               optionsContainer.style.left = `${
                 pseudoRect.left + window.scrollX
-              }px`; 
+              }px`;
             });
 
             document.addEventListener("click", (event) => {
