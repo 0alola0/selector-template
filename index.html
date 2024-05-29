@@ -11,9 +11,6 @@
         margin: 0;
         padding: 0;
       }
-      .hidden {
-        display: none;
-      }
       label {
         display: block;
         font-family: Open Sans;
@@ -25,13 +22,13 @@
       }
       .options {
         max-height: 200px;
-        overflow-y: auto;
+        overflow-y: hidden;
         border: 1px solid #ccc;
         position: absolute;
         background: white;
         z-index: 1000;
         box-sizing: border-box;
-        padding: 11px 15px 11px 15px;
+        padding: 15px;
         border-radius: 8px;
         border: 1px solid #bbbbbb;
         font-family: Open Sans;
@@ -39,6 +36,13 @@
         font-weight: 400;
         line-height: 20.43px;
         text-align: left;
+        display: flex;
+        flex-direction: column;
+      }
+      .list_wrapper{
+        flex: 1;
+        overflow-y: auto;
+        margin-top: 12px;
       }
       .options ul {
         list-style: none;
@@ -140,6 +144,9 @@
       }
       .spacer {
         height: 600px;
+      }
+      .hidden {
+        display: none;
       }
     </style>
   </head>
@@ -254,9 +261,23 @@
             const optionsContainer = document.createElement("div");
             optionsContainer.className = "options hidden";
 
-            const optionsList = document.createElement("ul");
+            const searchWrapper = document.createElement("div");
+            searchWrapper.className = "search_wrapper";
 
-            selectElement.selectedIndex = -1;
+            const searchInput = document.createElement("input");
+            searchInput.type = "text";
+            searchInput.className = "generated_selector_search";
+            searchInput.placeholder = "Search options...";
+            searchInput.addEventListener(
+              "input",
+              debounce(() => filterOptions(searchInput, optionsList), 300)
+            );
+            searchWrapper.appendChild(searchInput);
+
+            const listWrapper = document.createElement("div");
+            listWrapper.className = "list_wrapper";
+
+            const optionsList = document.createElement("ul");
 
             const optionElements = Array.from(selectElement.options).map(
               (option) => ({
@@ -281,7 +302,9 @@
               optionsList.appendChild(li);
             });
 
-            optionsContainer.appendChild(optionsList);
+            listWrapper.appendChild(optionsList);
+            optionsContainer.appendChild(searchWrapper);
+            optionsContainer.appendChild(listWrapper);
 
             let footer = document.querySelector("footer");
             if (!footer) {
@@ -290,7 +313,6 @@
             }
 
             footer.appendChild(optionsContainer);
-
             selectorWrapper.appendChild(pseudoSelector);
 
             pseudoSelector.addEventListener("click", () => {
@@ -333,18 +355,6 @@
 
             if (selectElement.disabled) {
               pseudoSelector.classList.add("disabled");
-            }
-            if (selectElement.classList.contains("searchable")) {
-              pseudoSelector.className = "pseudo-selector searchable_pseudo";
-              const searchInput = document.createElement("input");
-              searchInput.type = "text";
-              searchInput.classList.add("generated_selector_search");
-              searchInput.placeholder = "Search options...";
-              searchInput.addEventListener(
-                "input",
-                debounce(() => filterOptions(searchInput, optionsList), 300)
-              );
-              optionsContainer.insertBefore(searchInput, optionsList);
             }
 
             updatePseudoSelectorText(
@@ -415,9 +425,11 @@
             pseudoSelector.classList.remove("open");
           }
         }
+
         if (!isMultiple && selectedOption.selected === false) {
           selectElement.value = "";
         }
+
         updatePseudoSelectorText(pseudoSelector, selectElement, optionsList);
       }
 
